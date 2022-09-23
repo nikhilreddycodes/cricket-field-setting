@@ -1,1 +1,266 @@
-<h1>Head</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/konva@2.4.2/konva.min.js"></script>
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/1.0.5/jquery.mobile-events.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="utf-8">
+    <title>Cricket Field </title>
+    <style>
+          .field {
+              margin: 0;
+              padding: 0;
+        height: 900px;
+        width: 900px;
+  			overflow: visible;
+          }
+    </style>
+</head>
+<body>
+  <div class='container'>
+  <div class='row'>
+    <div class='col-lg-12' style='height: 40px'>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-lg-10'>
+      <div class='field' id='field'>
+        <div id="container"></div>
+      </div>
+    </div>
+    <div class='col-lg-2'>
+      <button type='button' class='btn btn-lg btn-primary' onclick="download();">Download</button>
+    </div>
+  </div>
+  </div>
+
+    
+<script>
+    function download(){
+      html2canvas($('#field')[0], {allowTaint: true}
+        ).then(function(canvas){
+        // document.body.appendChild(canvas);
+        canvas.toBlob(function(blob) {
+          window.saveAs(blob, 'field_placement.png');
+        });
+      });
+    }
+
+    var width = $('#field').width();
+    var height = $('#field').height();
+    var offset = $('#field').offset();
+    var stage = new Konva.Stage({
+        container: 'container',
+        width: width,
+        height: height
+    });
+    var layer = new Konva.Layer();
+
+    // setting ground
+    var ellipse = new Konva.Ellipse({
+        radius: {x: width/2, y: height/2},
+        x: width/2,
+        y: height/2,
+        fill: '#4CB050',
+        stroke: 'black',
+        strokeWidth: 0
+    });
+    var ellipse2 = new Konva.Ellipse({
+        radius: {x: width*0.95/2, y: height*0.95/2},
+        x: width/2,
+        y: height/2,
+        fill: '#0D8F4F',
+        stroke: 'white',
+        strokeWidth: 4
+    });
+
+    var ellipse3 = new Konva.Ellipse({
+        radius: {x: width*0.55/2, y: height*0.55/2},
+        x: width/2,
+        y: height/2,
+        fill: '#0A8043',
+        stroke: 'white',
+        strokeWidth: 4
+    });
+
+    var pitchx = 0.07
+    var pitchy = 0.18
+
+    var rectangle = new Konva.Rect({
+        width: width*pitchx,
+        height: height*pitchy,
+        x: width/2-width*pitchx/2,
+        y: height/2-height*pitchy/2,
+        fill: '#E2B07E',
+        stroke: '#E2D1A7',
+    });
+
+    layer.add(ellipse);
+    layer.add(ellipse2);
+    layer.add(ellipse3);
+    layer.add(rectangle);
+    stage.add(layer);
+
+    // bound below y=50
+    var getPlayerGroup = function(pageX, pageY){
+        return new Konva.Group({
+            x: pageX,
+            y: pageY,
+            draggable: true,
+            dragBoundFunc: function(pos) {
+                if(pos.x>width && pos.y>height){
+                  return{x: width, y: height}
+                }
+                if(pos.x>width && pos.y<0){
+                  return{x: width, y: 0}
+                }
+                if(pos.x<0 && pos.y<0){
+                  return{x: 0, y: 0}
+                }
+                if(pos.x<0 && pos.y>height){
+                  return{x: 0, y: height}
+                }
+                else if(pos.x<0){
+                  return{x: 0, y: pos.y}
+                }
+                else if(pos.x>width){
+                  return{x: width, y: pos.y}
+                }
+                else if(pos.y<0){
+                  return{x: pos.x, y: 0}
+                }
+                else if(pos.y>height){
+                  return{x: pos.x, y: height}
+                }
+
+                return{x: pos.x, y: pos.y}
+                // var ry = height/2;
+                // var rx = width/2;
+                // var disy = pos.y-ry;
+                // var disx = pos.x-rx;
+
+                // if ((disx*disx)/(rx*rx)+(disy*disy)/(ry*ry)<1){
+                //   return{x: pos.x, y: pos.y}
+                // }
+                // else{
+                //   return{x: pos.x, y: pos.y}
+                // }
+            }
+        });
+    };
+
+    var getTextNode = function(stageBox , number)  {
+      var textNode = new Konva.Text({
+          fontSize: 14,
+          fontFamily: 'Ariel',
+          text: 'Player'+ number,
+          fontStyle: 'bold',
+          fill: 'black',
+          padding: 10,
+          x: -40,
+          y: 5,
+      });
+	 
+      textNode.on('dblclick', () => {
+            var textPosition = textNode.getAbsolutePosition();
+            var areaPosition = {
+                x: textPosition.x + stageBox.left,
+                y: textPosition.y + stageBox.top
+            };
+            // create text area and style it
+            var textarea = document.createElement('textarea');
+            document.body.appendChild(textarea);
+            textarea.value = textNode.text();
+            textarea.style.position = 'absolute';
+            textarea.style.top = areaPosition.y + 'px';
+            textarea.style.left = areaPosition.x + 'px';
+            textarea.style.width = textNode.width();
+            textarea.focus();
+            textarea.addEventListener('keydown', function (e){
+                console.log(e.keyCode);
+                // hide on enter
+                if (e.keyCode === 13 || e.keyCode === 27) {
+                    textNode.text(textarea.value);
+                    layer.draw();
+                    document.body.removeChild(textarea);
+                }
+            });
+        });
+        return textNode;
+  }
+    var getBluePlayer = function(textNode) {
+        return new Konva.Circle({
+        radius:10,
+        fill: 'blue',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+  }
+    var getYellowPlayer = function(textNode) {
+      return new Konva.Circle({
+        radius:10,
+        x: 5,
+        y: 5,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+  } 
+
+    var getRedPlayer = function(textNode) {
+      return new Konva.Circle({
+        radius:10,
+        x: 5,
+        y: 5,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+  } 
+
+    var positions = [
+        [0.49, 0.32],
+        [0.49, 0.65],
+        [0.46, 0.3],
+        [0.25, 0.15],
+        [0.3, 0.41],
+        [0.35, 0.53],
+        [0.32, 0.65],
+        [0.6, 0.74],
+        [0.7, 0.6],
+        [0.71, 0.41],
+        [0.6, 0.07],
+    ];
+
+    var yellowGroup = getPlayerGroup(positions[0][0]*width, positions[0][1]*height);
+    var textNode1 = getTextNode(stage.getContainer().getBoundingClientRect(), 1);
+    yellowGroup.add(getYellowPlayer(textNode1)).add(textNode1);
+    layer.add(yellowGroup);
+    stage.add(layer);
+
+    var redGroup = getPlayerGroup(positions[1][0]*width, positions[1][1]*height);
+    var textNode1 = getTextNode(stage.getContainer().getBoundingClientRect(), 2);
+    redGroup.add(getRedPlayer(textNode1)).add(textNode1);
+    layer.add(redGroup);
+    stage.add(layer);
+
+    for (i=2; i<positions.length;i++){
+        var playerGroup = getPlayerGroup( positions[i][0]*width, positions[i][1]*height);
+        var text = getTextNode( stage.getContainer().getBoundingClientRect(), i+1);
+        playerGroup.add(getBluePlayer(text)).add(text);
+        layer.add(playerGroup);
+        stage.add(layer);
+    }
+    function init(){
+
+    }
+</script>
+
+</body>
+</html>
