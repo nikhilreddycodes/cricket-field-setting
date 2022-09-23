@@ -27,7 +27,7 @@
   <div class='row'>
     <div class='col-lg-12'>
       <h3>Cricket Field Editor</h3>
-      <h4>Double click on players to rename them. Press 'Enter' or 'Esc' to Confirm names.</h4>
+      <h4>To rename players write them in the box.</h4>
     </div>
   </div>
   <div class='row'>
@@ -38,6 +38,9 @@
     </div>
     <div class='col-lg-2'>
       <button type='button' class='btn btn-lg btn-primary' onclick="download();">Download</button>
+      <div id='names'>
+        
+      </div>
     </div>
   <div class='footer'>This is build using another <a href="https://gauravpolekar.github.io/cricketField/">field-editor</a></div>
   </div>
@@ -162,6 +165,7 @@
           fontSize: 14,
           fontFamily: 'Ariel',
           text: 'Player'+ number,
+          id: number.toString(),
           fontStyle: 'bold',
           fill: 'black',
           padding: 10,
@@ -169,32 +173,8 @@
           y: 5,
       });
 	 
-      textNode.on('dblclick', () => {
-            var textPosition = textNode.getAbsolutePosition();
-            var areaPosition = {
-                x: textPosition.x + stageBox.left,
-                y: textPosition.y + stageBox.top
-            };
-            // create text area and style it
-            var textarea = document.createElement('textarea');
-            document.body.appendChild(textarea);
-            textarea.value = textNode.text();
-            textarea.style.position = 'absolute';
-            textarea.style.top = areaPosition.y + 'px';
-            textarea.style.left = areaPosition.x + 'px';
-            textarea.style.width = textNode.width();
-            textarea.focus();
-            textarea.addEventListener('keydown', function (e){
-                console.log(e.keyCode);
-                // hide on enter
-                if (e.keyCode === 13 || e.keyCode === 27) {
-                    textNode.text(textarea.value);
-                    layer.draw();
-                    document.body.removeChild(textarea);
-                }
-            });
-        });
         return textNode;
+
   }
     var getBluePlayer = function(textNode) {
         return new Konva.Circle({
@@ -239,6 +219,16 @@
         [0.71, 0.41],
         [0.6, 0.07],
     ];
+
+    for (i=0; i<positions.length;i++){
+      $('#names').append('<input type="text" class="form-control" id="name'+(i+1).toString()+ '" placeholder="player '+(i+1).toString() +'" onchange="yass('+(i+1).toString()+')">');
+    }
+    function yass(ind){
+      console.log($('#name'+ind.toString()).val());
+      console.log(stage.find('#'+ind.toString())[0]);
+      stage.find('#'+ind.toString())[0].text($('#name'+ind.toString()).val());
+      layer.draw()
+    }
 
     var yellowGroup = getPlayerGroup(positions[0][0]*width, positions[0][1]*height);
     var textNode1 = getTextNode(stage.getContainer().getBoundingClientRect(), 1);
