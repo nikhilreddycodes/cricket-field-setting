@@ -16,8 +16,8 @@
           .field {
               margin: 0;
               padding: 0;
-        height: 900px;
-        width: 900px;
+        height: 800px;
+        width: 800px;
   			overflow: visible;
           }
     </style>
@@ -25,7 +25,9 @@
 <body>
   <div class='container'>
   <div class='row'>
-    <div class='col-lg-12' style='height: 40px'>
+    <div class='col-lg-12'>
+      <h3>Cricket Field Editor</h3>
+      <h4>Double click on players to rename them. Press 'Enter' or 'Esc' to Confirm names.</h4>
     </div>
   </div>
   <div class='row'>
@@ -37,9 +39,9 @@
     <div class='col-lg-2'>
       <button type='button' class='btn btn-lg btn-primary' onclick="download();">Download</button>
     </div>
+  <div class='footer'>This is build using another <a href="https://gauravpolekar.github.io/cricketField/">field-editor</a></div>
   </div>
   </div>
-
     
 <script>
     function download(){
