@@ -144,18 +144,23 @@
                   return{x: pos.x, y: height}
                 }
 
-                return{x: pos.x, y: pos.y}
-                // var ry = height/2;
-                // var rx = width/2;
-                // var disy = pos.y-ry;
-                // var disx = pos.x-rx;
+                var ry = height/2;
+                var rx = width/2;
+                var disy = pos.y-ry;
+                var disx = pos.x-rx;
+                if ((disx*disx)/(rx*rx)+(disy*disy)/(ry*ry)<1){
+                  return{x: pos.x, y: pos.y}
+                }
+                else{
+                  x = disx/rx;
+                  y = disy/ry;
+                  r = Math.sqrt(x*x+y*y)
+                  disx = (x*rx/r)+rx
+                  disy = (y*ry/r)+ry
 
-                // if ((disx*disx)/(rx*rx)+(disy*disy)/(ry*ry)<1){
-                //   return{x: pos.x, y: pos.y}
-                // }
-                // else{
-                //   return{x: pos.x, y: pos.y}
-                // }
+
+                  return{x: disx, y: disy}
+                }
             }
         });
     };
