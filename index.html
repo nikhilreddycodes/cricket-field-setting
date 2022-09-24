@@ -31,13 +31,19 @@
     </div>
   </div>
   <div class='row'>
-    <div class='col-lg-10'>
+    <div class='col-lg-9'>
       <div class='field' id='field'>
         <div id="container"></div>
       </div>
     </div>
-    <div class='col-lg-2'>
+    <div class='col-lg-3'>
       <button type='button' class='btn btn-lg btn-primary' onclick="download();">Download</button>
+      <br>
+      <input class="form-check-input" type="checkbox" value="" id="pname" onchange="hidepname();" checked>
+      <label class="form-check-label" for="pname">Show Player Names</label>
+      <br>
+      <input class="form-check-input" type="checkbox" value="" id="posname" onchange="hideposname();" checked>
+      <label class="form-check-label" for="posname">Show Positions</label>
       <div id='names'>
         
       </div>
@@ -52,7 +58,7 @@
         ).then(function(canvas){
         // document.body.appendChild(canvas);
         canvas.toBlob(function(blob) {
-          window.saveAs(blob, 'field_placement.png');
+          window.saveAs(blob, stage.find('#bowlername')[0].text()+'_placement.png');
         });
       });
     }
@@ -97,6 +103,8 @@
 
     var pitchx = 0.07
     var pitchy = 0.18
+    var creasex = 0.035
+    var creasey = 0.02
 
     var rectangle = new Konva.Rect({
         width: width*pitchx,
@@ -107,10 +115,26 @@
         stroke: '#E2D1A7',
     });
 
+    var cr1 = new Konva.Line({
+        points: [width/2-width*(pitchx/2+creasex), height/2-height*(pitchy/2-creasey), width/2+width*(pitchx/2+creasex), height/2-height*(pitchy/2-creasey)],
+        stroke: 'white',
+        strokeWidth: '2',
+        
+    });
+
+    var cr2 = new Konva.Line({
+        points: [width/2-width*(pitchx/2+creasex), height/2+height*(pitchy/2-creasey), width/2+width*(pitchx/2+creasex), height/2+height*(pitchy/2-creasey)],
+        stroke: 'white',
+        strokeWidth: '2',
+        
+    });
+
     layer.add(ellipse);
     layer.add(ellipse2);
     layer.add(ellipse3);
     layer.add(rectangle);
+    layer.add(cr1);
+    layer.add(cr2);
     stage.add(layer);
     var pad = 20;
 
@@ -196,6 +220,24 @@
         return textNode;
   }
 
+   var getBowler = function(bname){
+      var textNode = new Konva.Text({
+          fontSize: 25,
+          fontFamily: 'Arial',
+          fontStyle: 'bold',
+          text: bname,
+          id: 'bowlername',
+          fill: 'black',
+          padding: 10,
+          x: width/2-100,
+          y: -10,
+          width: 200,
+          align:"center"
+      });
+   
+        return textNode;
+  }
+
 
     var getBluePlayer = function(textNode) {
         return new Konva.Circle({
@@ -228,9 +270,9 @@
   } 
 
     var positions = [
-        [0.49, 0.32],
-        [0.49, 0.65],
-        [0.46, 0.3],
+        [0.49, 0.347],
+        [0.47, 0.68],
+        [0.466, 0.333],
         [0.25, 0.15],
         [0.3, 0.41],
         [0.35, 0.53],
@@ -337,11 +379,14 @@
     }
 
     for (var i=0; i<positions.length;i++){
-      $('#names').append('<input type="text" class="form-control" id="name'+(i+1).toString()+ '" placeholder="player '+(i+1).toString() +'" onchange="yass('+(i+1).toString()+')">');
+      $('#names').append('<input type="text" class="form-control" id="name'+(i+1).toString()+ '" placeholder="player '+(i+1).toString() +'" onchange="yass('+(i+1).toString()+')"><br>');
     }
     function yass(ind){
       stage.find('#'+ind.toString())[0].text($('#name'+ind.toString()).val());
-      layer.draw()
+      if (ind=='2'){
+        stage.find('#bowlername')[0].text($('#name'+ind.toString()).val());
+      }
+      layer.draw();
     }
 
     var yellowGroup = getPlayerGroup(positions[0][0]*width, positions[0][1]*height);
@@ -363,24 +408,60 @@
         var text = getTextNode( stage.getContainer().getBoundingClientRect(), i+1);
         var abspos = [positions[i][0], positions[i][1]];
 
-        var textNode2 = getPosNode(stage.getContainer().getBoundingClientRect(), allpos[nearest_neighbor(abspos, allposcoord)], "pos");
+        var textNode2 = getPosNode(stage.getContainer().getBoundingClientRect(), allpos[nearest_neighbor(abspos, allposcoord)], "pos"+i.toString());
         playerGroup.add(getBluePlayer(text)).add(text).add(textNode2);;
         layer.add(playerGroup);
         stage.add(layer);
     }
+    bname = getBowler('Bowler')
+    layer.add(bname);
+    stage.add(layer);
 
     stage.on('dragend', function (e) {
       console.log();
       var posx = e.target.x()
       var posy = e.target.y();
       var tbox = e.target.getChildren()[2];
-      if (tbox.id()=='pos'){
+      if (tbox.id().substring(0, 3)=='pos'){
         var abspos = [posx/width, posy/height]
         var newtext = allpos[nearest_neighbor(abspos, allposcoord)]
         tbox.text(newtext)
         layer.draw();
       }
     });
+
+    function hidepname(){
+      if ($('#pname').is(':checked')){
+        for (var i=0; i<positions.length; i++){
+          stage.find('#'+(i+1).toString())[0].show();
+        }
+      }
+      else{
+        for (var i=0; i<positions.length; i++){
+          stage.find('#'+(i+1).toString())[0].hide();
+        }
+      }
+      layer.draw();
+    }
+
+    function hideposname(){
+      if ($('#posname').is(':checked')){
+        stage.find('#wk')[0].show();
+        stage.find('#bowler')[0].show();
+        for (var i=2; i<positions.length; i++){
+          stage.find('#pos'+i.toString())[0].show();
+        }
+      }
+      else{
+        stage.find('#wk')[0].hide();
+        stage.find('#bowler')[0].hide();
+        var fielders = stage.find('#pos')
+        for (var i=2; i<positions.length; i++){
+          stage.find('#pos'+i.toString())[0].hide();
+        }
+      }
+      layer.draw();
+    }
 
 </script>
 
