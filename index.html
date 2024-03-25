@@ -142,7 +142,7 @@
     });
     bat.add(batshaft);
     bat.add(batgrip);
-    bat.rotate(45)
+    bat.rotate(30)
     // Add the rectangle to the layer
 
     var pitchx = 0.07
@@ -439,11 +439,11 @@
         name = "Batter";
       }
       if ($('#left-handed').is(':checked')){
-        bat.rotate(-90)
+        bat.rotate(-60)
         stage.find('#battername')[0].text("Batter: "+name+" (LH)");
       }
       else{
-        bat.rotate(90)        
+        bat.rotate(60)        
         stage.find('#battername')[0].text("Batter: "+name+" (RH)");
       }
 
