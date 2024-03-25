@@ -47,6 +47,10 @@
       <br>
       <input class="form-check-input" type="checkbox" value="" id="posname" onchange="hideposname();" checked>
       <label class="form-check-label" for="posname">Show Positions</label>
+
+      <br>
+      <input class="form-check-input" type="checkbox" value="" id="left-handed" onchange="togglehands();">
+      <label class="form-check-label" for="left-handed">Left-Handed</label>
       <div id='names'>
         
       </div>
@@ -105,10 +109,49 @@
         strokeWidth: 4
     });
 
+    // BAT
+    var batwidth = 0.006
+    var batheight = 0.02
+
+    var batshaft = new Konva.Rect({
+        x: 0,
+        y: 0,
+        width: width*batwidth,
+        height: height*batheight,
+        fill: '#C8B9A4',
+        stroke: 'grey',
+        cornerRadius: 1,
+        strokeWidth: 0.5
+    });
+
+
+    var batgrip = new Konva.Rect({
+        x: width*batwidth/2 - width*batwidth/6,
+        y: -height*batheight/2,
+        width: width*batwidth/3,
+        height: height*batheight/2,
+        fill: 'black',
+        stroke: 'white',
+        strokeWidth: 0.001
+    });
+
+
+    var bat = new Konva.Group({
+        x: width/2,
+        y: height/2
+    });
+    bat.add(batshaft);
+    bat.add(batgrip);
+    bat.rotate(45)
+    // Add the rectangle to the layer
+
     var pitchx = 0.07
     var pitchy = 0.18
     var creasex = 0.035
     var creasey = 0.02
+
+    bat.y(height/2-height*(pitchy/2-0.01))
+    bat.x(width/2-width*(0.005))
 
     var rectangle = new Konva.Rect({
         width: width*pitchx,
@@ -139,7 +182,9 @@
     layer.add(rectangle);
     layer.add(cr1);
     layer.add(cr2);
+    layer.add(bat);
     stage.add(layer);
+
     var pad = 20;
 
     // bound below y=50
@@ -242,6 +287,24 @@
         return textNode;
   }
 
+
+   var getBatter = function(bname){
+      var textNode = new Konva.Text({
+          fontSize: 25,
+          fontFamily: 'Arial',
+          fontStyle: 'bold',
+          text: bname,
+          id: 'battername',
+          fill: 'black',
+          padding: 0,
+          x: 0,
+          y: height-25,
+          width: width,
+          align:"center"
+      });
+   
+        return textNode;
+  }
 
     var getBluePlayer = function(textNode) {
         return new Konva.Circle({
@@ -363,6 +426,44 @@
         [0.921, 0.98-0.650],
     ];
 
+    function togglehands(){
+      // var tmp = []
+      var groups = layer.find(node => node instanceof Konva.Group);
+      groups.forEach(group => {
+        group.x(width-group.x());
+      });
+
+
+      var name = $('#name0').val();
+      if (name===''){
+        name = "Batter";
+      }
+      if ($('#left-handed').is(':checked')){
+        bat.rotate(-90)
+        stage.find('#battername')[0].text("Batter: "+name+" (LH)");
+      }
+      else{
+        bat.rotate(90)        
+        stage.find('#battername')[0].text("Batter: "+name+" (RH)");
+      }
+
+      var tmp = []
+      for (var i=0; i<allposcoord.length;i++){
+        var tm = [0.98-allposcoord[i][0], allposcoord[i][1]]
+        tmp.push(tm)
+      }
+      allposcoord = tmp
+      hideposname();
+
+      // var tmp = []
+      // for (var i=0; i<positions.length;i++){
+      //   var tm = [0.98-positions[i][0], positions[i][1]]
+      //   tmp.push(tm)
+      // }
+      // positions = tmp
+    }
+
+
     // positions = allposcoord;
 
     function dist(a, b){
@@ -381,15 +482,34 @@
       }
       return ret;
     }
+    $('#names').append('<input type="text" class="form-control" id="name'+(0).toString()+ '" placeholder="Batter name" onchange="changename('+(0).toString()+')"><br>');
 
     for (var i=0; i<positions.length;i++){
-      $('#names').append('<input type="text" class="form-control" id="name'+(i+1).toString()+ '" placeholder="player '+(i+1).toString() +'" onchange="yass('+(i+1).toString()+')"><br>');
+      $('#names').append('<input type="text" class="form-control" id="name'+(i+1).toString()+ '" placeholder="player '+(i+1).toString() +'" onchange="changename('+(i+1).toString()+')"><br>');
     }
-    function yass(ind){
-      stage.find('#'+ind.toString())[0].text($('#name'+ind.toString()).val());
-      if (ind=='2'){
-        stage.find('#bowlername')[0].text($('#name'+ind.toString()).val());
+
+
+    function changename(ind){
+      // console.log(ind)
+      if (ind=='0'){
+        var name = $('#name'+ind.toString()).val();
+        if (name===''){
+          name = "batter";
+        }
+        if ($('#left-handed').is(':checked')){
+          stage.find('#battername')[0].text("Batter: "+name+" (LH)");
+        }
+        else{
+          stage.find('#battername')[0].text("Batter: "+name+" (RH)");
+        }
       }
+      else{
+        stage.find('#'+ind.toString())[0].text($('#name'+ind.toString()).val());
+        if (ind=='2'){
+          stage.find('#bowlername')[0].text($('#name'+ind.toString()).val());
+        }
+      }
+
       layer.draw();
     }
 
@@ -418,7 +538,9 @@
         stage.add(layer);
     }
     bname = getBowler('Bowler')
+    battername = getBatter('Batter: Batter (RH)')
     layer.add(bname);
+    layer.add(battername);
     stage.add(layer);
 
     stage.on('dragend', function (e) {
