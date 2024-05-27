@@ -2,4 +2,4 @@
 
 Updates
 
-[May 26]: Added save and load json function
+[May 26, 2024]: Added save and load json function
