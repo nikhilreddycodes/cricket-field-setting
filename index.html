@@ -14,7 +14,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <meta charset="utf-8">
-    <title>Cricket Field </title>
+    <title>Field Setting</title>
     <style>
           .field {
               margin: 0;
@@ -51,9 +51,8 @@
   <div class='container'>
   <div class='row'>
     <div class='col-lg-12'>
-      <h3>Cricket Field Editor</h3>
-      <h5>To rename players write them in the box.</h5>
-      <h5><a href="fielding_metric.html">Try the new editor</a> with fielder coverage visualization.</h5>
+      <h3>Cricket Field Setting</h3>
+      <h5>Go to <a href="fielding_metric.html">Cricket Field Setting with Coverage</a> with fielder coverage visualization.</h5>
     </div>
   </div>
   <div class='row'>
@@ -78,11 +77,13 @@
       <input class="form-check-input" type="checkbox" value="" id="left-handed" onchange="togglehands();">
       <label class="form-check-label" for="left-handed">Left-Handed</label>
       </div>
-      <hr class="divider">      
+      <hr class="divider">
+      <h5>To rename players write them in the box.</h5>
+
       <div id='names'>        
       </div>
       <hr class="divider">
-
+      
       <button type='button' class='btn btn-lg-1 btn-primary' onclick="save_position();" data-toggle="tooltip" title="Save as a file to load and reuse later.">Save</button>
 
       <button type="button" class="btn btn-lg-1 btn-primary" onclick="document.getElementById('customFile').click()" data-toggle="tooltip" title="Reload a saved json file.">Load</button>
@@ -90,8 +91,8 @@
   </div>
   </div>
   <div id="alertContainer"></div>
-  <div class='footer'>This is build using another <a href="https://gauravpolekar.github.io/cricketField/">field-editor</a></div>
-  <div class='footer'>For feature requests, comments or supporting me use this<a href="https://www.buymeacoffee.com/utkarshmall13"> link</a></div>
+  <div class='footer'>Credit: This app is based on <a href="https://utkarshmall13.github.io/cricket-field-editor/">Utkarshmall13's field-editor</a></div>
+  <!-- <div class='footer'>For feature requests, comments or supporting me use this<a href=""> link</a></div> -->
     
 <script>
     $(function () {

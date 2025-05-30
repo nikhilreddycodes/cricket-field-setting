@@ -1,7 +1,3 @@
-# cricket-field-editor
+# cricket-field-setting
 
-Updates
-
-[May 26, 2024]: Added save and load json function.
-[Mar 16, 2025]: A new editor with fielding/catching coverage visualization.
-
+This custom cricket feild setting app is inspired and copied over from [utkarshmall13's cricket-field-editor](https://utkarshmall13.github.io/cricket-field-editor/) with an intention to add more features and extend the basic app.
