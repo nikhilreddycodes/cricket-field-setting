@@ -4,7 +4,7 @@ This custom cricket feild setting app is inspired and copied over from [utkarshm
 
 #### Classic Cricket Field Setting App can be accessed via link: [https://nikhilreddycodes.github.io/cricket-field-setting](https://nikhilreddycodes.github.io/cricket-field-setting/index.html)
 
-#### Cricket Field Setting with Coverage App can be accessed via link: [https://nikhilreddycodes.github.io/cricket-field-setting/feilding_metric](https://nikhilreddycodes.github.io/cricket-field-setting/fielding_metric.html)
+#### Cricket Field Setting with Coverage App can be accessed via link: [https://nikhilreddycodes.github.io/cricket-field-setting/coverage](https://nikhilreddycodes.github.io/cricket-field-setting/coverage.html)
 
 ### Additional Features Implemented in this App:
 - **Player Color Customization:**  The app now supports custom color selection for players.
