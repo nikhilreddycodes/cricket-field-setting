@@ -15,4 +15,4 @@ This custom cricket feild setting app is inspired and copied over from [utkarshm
 
 ![alt text][logo]
 
-[logo]: csf.png "This App's Screenshot"
+[logo]: cfs.png "This App's Screenshot"
