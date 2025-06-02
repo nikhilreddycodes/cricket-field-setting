@@ -91,8 +91,9 @@
       border-top: 0;
       vertical-align: middle;
     }
+
     .usefulLists.table td svg,
-    .usefulLists.table th svg{
+    .usefulLists.table th svg {
       margin-bottom: 2px;
     }
 
@@ -119,7 +120,7 @@
                     d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                   <path
                     d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
-                </svg>  Drag and move players in the field.</td>
+                </svg> Drag and move players in the field.</td>
               <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-info-square" viewBox="0 0 16 16">
                   <path
@@ -477,8 +478,8 @@
         id: id,
         fill: 'blue',
         padding: 10,
-        x: 8,
-        y: -15,
+        x: -40,
+        y: -35,
       });
 
       return textNode;
@@ -491,13 +492,14 @@
         fontStyle: 'bold',
         text: bname,
         id: 'bowlername',
-        textDecoration: 'underline',
+        lineHeight: 1.1,
         fill: 'black',
-        padding: 10,
-        x: width / 2 - 100,
+        padding: 5,
+        x: 1,
         y: -5,
         width: 200,
-        align: "center"
+        height: 125,
+        align: "left"
       });
 
       return textNode;
@@ -512,12 +514,13 @@
         text: bname,
         id: 'batsmanname',
         fill: 'black',
-        textDecoration: 'underline',
+        lineHeight: 1.1,
+        verticalAlign: 'bottom',
         padding: 0,
-        x: 0,
-        y: height - 25,
-        width: width,
-        align: "center"
+        x: 1,
+        y: height - 140,
+        width: 175,
+        align: "left"
       });
 
       return textNode;
@@ -658,11 +661,11 @@
       }
       if ($('#left-handed').is(':checked')) {
         bat.rotate(-60)
-        stage.find('#batsmanname')[0].text("Batsman: " + name + " (LH)");
+        stage.find('#batsmanname')[0].text("(LH) Batsman- " + name);
       }
       else {
         bat.rotate(60)
-        stage.find('#batsmanname')[0].text("Batsman: " + name + " (RH)");
+        stage.find('#batsmanname')[0].text("(RH) Batsman- " + name);
       }
 
       var tmp = []
@@ -699,7 +702,7 @@
       const jsonString = JSON.stringify(save_state, null, 2);
       const blob = new Blob([jsonString], { type: 'application/json' });
       const link = document.createElement('a');
-      link.download = stage.find('#bowlername')[0].text() + '_to_' + stage.find('#batsmanname')[0].text().substring(8).replace(' ', '_') + '_placement.json'
+      link.download = stage.find('#bowlername')[0].text() + '_to_' + stage.find('#batsmanname')[0].text().replace(' ', '_') + '_placement.json'
       link.href = window.URL.createObjectURL(blob);
       document.body.appendChild(link);
       link.click();
@@ -844,16 +847,16 @@
           name = "Batsman";
         }
         if ($('#left-handed').is(':checked')) {
-          stage.find('#batsmanname')[0].text("Batsman: " + name + " (LH)");
+          stage.find('#batsmanname')[0].text("(LH) Batsman- " + name);
         }
         else {
-          stage.find('#batsmanname')[0].text("Batsman: " + name + " (RH)");
+          stage.find('#batsmanname')[0].text("(RH) Batsman- " + name);
         }
       }
       else {
         stage.find('#' + ind.toString())[0].text($('#name' + ind.toString()).val());
         if (ind == '2') {
-          stage.find('#bowlername')[0].text($('#name' + ind.toString()).val());
+          stage.find('#bowlername')[0].text("Bowler- " + $('#name' + ind.toString()).val());
         }
       }
 
@@ -888,7 +891,7 @@
       drawcatchcover_init(playerGroup);
     }
     bname = getBowler('Bowler')
-    batsmanname = getBatsman('Batsman: Batsman (RH)')
+    batsmanname = getBatsman('(RH) Batsman')
     layer.add(bname);
     layer.add(batsmanname);
     stage.add(layer);
