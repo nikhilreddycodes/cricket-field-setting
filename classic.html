@@ -24,7 +24,7 @@
     integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <meta charset="utf-8">
-  <title>Coverage Setting</title>
+  <title>Cricket Field Setting</title>
   <style>
     .field {
       margin: 0;
@@ -60,12 +60,14 @@
     #topBottons>.row>button.btnSave {
       margin-top: 10px;
     }
+
     .divider {
       border-top: 2px solid black;
       /* Black line */
       margin: 1rem 0;
       /* Margin for spacing */
     }
+
     .file-upload-input {
       position: absolute;
       top: 0;
@@ -80,15 +82,15 @@
       width: 0%;
     }
   </style>
-
 </head>
 
 <body>
   <div class='container'>
     <div class='row headdingRow'>
       <div class='col-lg-12'>
-        <h3>Cricket Field Setting with Coverage</h3>
-        <h5>Go to <a href="index.html">Classic Cricket Field Setting</a></h5>
+        <h3>Classic Cricket Field Setting</h3>
+        <h5>Check out the latest version of this app <a href="index.html">Cricket Field Setting with Coverage</a> shows fielder coverage
+          visualization.</h5>
       </div>
     </div>
     <div class='row'>
@@ -107,7 +109,6 @@
           </div>
         </div>
         <hr class="divider">
-        <p>Check/Uncheck to see fielders boundary and catch coverage.</p>
         <div class="form-check">
           <input class="form-check-input" type="checkbox" value="" id="pname" onchange="hidepname();" checked>
           <label class="form-check-label" for="pname">Show Player Names</label>
@@ -121,18 +122,6 @@
           <input class="form-check-input" type="checkbox" value="" id="left-handed" onchange="togglehands();">
           <label class="form-check-label" for="left-handed">Left-Handed</label>
         </div>
-
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="boundarycoverage"
-            onchange="toggleboundarycoverage();" checked>
-          <label class="form-check-label" for="boundarycoverage">Show Boundary Coverage</label>
-        </div>
-
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="catchcoverage" onchange="togglecatchcoverage();">
-          <label class="form-check-label" for="catchcoverage">Show Catch Coverage</label>
-        </div>
-
         <hr class="divider">
         <h5>Feilding Team players</h5>
         <div id='names'>
@@ -158,10 +147,12 @@
     </div>
   </div>
   <div id="alertContainer"></div>
+
   <script>
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
     })
+
     function showAlert(message) {
       var alertContainer = document.getElementById('alertContainer');
       var alertHtml = `
@@ -186,7 +177,6 @@
 
     var Width = $('#field').width();
     var width = $('#field').width() * 8 / 9.5;
-    console.log(width);
     var height = $('#field').height();
     var offset = $('#field').offset();
     var stage = new Konva.Stage({
@@ -194,9 +184,6 @@
       width: Width,
       height: height
     });
-    var layerground = new Konva.Layer();
-    var layercover = new Konva.Layer();
-    var layercatch = new Konva.Layer();
     var layer = new Konva.Layer();
 
     // Yellow color for WK, Red color for Baller
@@ -205,7 +192,7 @@
     var wkColor = '#708090'
     var bowlerColor = 'yellow'
 
-     // setting ground
+    // setting ground
     var ellipse = new Konva.Ellipse({
       radius: { x: width / 2, y: height / 2 },
       x: width / 2,
@@ -223,14 +210,13 @@
       strokeWidth: 4
     });
 
-    thirtyardsdist = 0.1838709677
     var ellipse3 = new Konva.Ellipse({
-      radius: { x: width * 0.47 / 2, y: height * 0.55 / 2 },
+      radius: { x: width * 0.55 / 2, y: height * 0.55 / 2 },
       x: width / 2,
       y: height / 2,
       fill: '#6EC172',
       stroke: 'white',
-      strokeWidth: 3
+      strokeWidth: 4
     });
 
     // BAT
@@ -269,7 +255,6 @@
     bat.rotate(30)
     // Add the rectangle to the layer
 
-    // Pitch
     var pitchx = 0.07
     var pitchy = 0.18
     var creasex = 0.035
@@ -277,7 +262,6 @@
 
     bat.y(height / 2 - height * (pitchy / 2 - 0.01))
     bat.x(width / 2 - width * (0.005))
-
 
     var rectangle = new Konva.Rect({
       width: width * pitchx,
@@ -302,30 +286,14 @@
 
     });
 
-    layerground.add(ellipse);
-    layerground.add(ellipse2);
-    layerground.add(ellipse3);
-    layerground.add(rectangle);
-    layerground.add(cr1);
-    layerground.add(cr2);
-    layerground.add(bat);
-    stage.add(layerground);
-
-
-    layercover.clipFunc(function (ctx) {
-      ctx.beginPath();
-      ctx.arc(width / 2, height / 2, width * 0.945 / 2, 0, 2 * Math.PI, false);
-      ctx.clip();
-    });
-
-    layercatch.clipFunc(function (ctx) {
-      ctx.beginPath();
-      ctx.arc(width / 2, height / 2, width * 0.945 / 2, 0, 2 * Math.PI, false);
-      ctx.clip();
-    });
-
-    stage.add(layercover);
-    stage.add(layercatch);
+    layer.add(ellipse);
+    layer.add(ellipse2);
+    layer.add(ellipse3);
+    layer.add(rectangle);
+    layer.add(cr1);
+    layer.add(cr2);
+    layer.add(bat);
+    stage.add(layer);
 
     var pad = 20;
 
@@ -442,7 +410,7 @@
         textDecoration: 'underline',
         padding: 0,
         x: 0,
-        y: height - 25,
+        y: height - 27,
         width: width,
         align: "center"
       });
@@ -574,8 +542,6 @@
       var groups = layer.find(node => node instanceof Konva.Group);
       groups.forEach(group => {
         group.x(width - group.x());
-        drawgroundedcover_init(group);
-        drawcatchcover_init(group);
       });
 
 
@@ -598,7 +564,6 @@
         tmp.push(tm)
       }
       allposcoord = tmp
-      layerground.draw()
       layer.draw()
     }
 
@@ -692,9 +657,8 @@
                   var newtext = allpos[nearest_neighbor(abspos, allposcoord)]
                   tbox.text(newtext)
                 }
+
               }
-              drawgroundedcover_init(group);
-              drawcatchcover_init(group);
             });
             layer.draw()
           } catch (error) {
@@ -763,12 +727,11 @@
       layer.draw();
     }
 
-
     function changename(ind) {
       if (ind == '0') {
         var name = $('#name' + ind.toString()).val();
         if (name === '') {
-          name = "Batsman";
+          name = "batsman";
         }
         if ($('#left-handed').is(':checked')) {
           stage.find('#batsmanname')[0].text("Batsman: " + name + " (LH)");
@@ -780,39 +743,36 @@
       else {
         stage.find('#' + ind.toString())[0].text($('#name' + ind.toString()).val());
         if (ind == '2') {
-          stage.find('#bowlername')[0].text($('#name' + ind.toString()).val());
+          stage.find('#bowlername')[0].text("Bowler:" + $('#name' + ind.toString()).val());
         }
       }
 
       layer.draw();
     }
 
-    var groundedcovers = [null, null, null, null, null, null, null, null, null, null, null];
-    var catchcovers = [null, null, null, null, null, null, null, null, null, null, null];
-
     var yellowGroup = getPlayerGroup(positions[0][0] * width, positions[0][1] * height);
     var textNode1 = getTextNode(stage.getContainer().getBoundingClientRect(), 1);
     var textNode2 = getPosNode(stage.getContainer().getBoundingClientRect(), 'WK', "wk");
     yellowGroup.add(getWKPlayer()).add(textNode1).add(textNode2);
     layer.add(yellowGroup);
+    stage.add(layer);
 
     var redGroup = getPlayerGroup(positions[1][0] * width, positions[1][1] * height);
     var textNode1 = getTextNode(stage.getContainer().getBoundingClientRect(), 2);
     var textNode2 = getPosNode(stage.getContainer().getBoundingClientRect(), 'bowler', "bowler");
     redGroup.add(getBowlerPlayer()).add(textNode1).add(textNode2);
     layer.add(redGroup);
+    stage.add(layer);
 
     for (var i = 2; i < positions.length; i++) {
       var playerGroup = getPlayerGroup(positions[i][0] * width, positions[i][1] * height);
       var text = getTextNode(stage.getContainer().getBoundingClientRect(), i + 1);
       var abspos = [positions[i][0], positions[i][1]];
-
       var textNode2 = getPosNode(stage.getContainer().getBoundingClientRect(), allpos[nearest_neighbor(abspos, allposcoord)], "pos" + i.toString());
       var takeTempColor = colorlist[0];
-      playerGroup.add(getAnyPlayerCircle(takeTempColor)).add(text).add(textNode2);;
+      playerGroup.add(getAnyPlayerCircle(takeTempColor)).add(text).add(textNode2);
       layer.add(playerGroup);
-      drawgroundedcover_init(playerGroup);
-      drawcatchcover_init(playerGroup);
+      stage.add(layer);
     }
     bname = getBowler('Bowler')
     batsmanname = getBatsman('Batsman: Batsman (RH)')
@@ -821,6 +781,7 @@
     stage.add(layer);
 
     stage.on('dragend', function (e) {
+      console.log();
       var posx = e.target.x()
       var posy = e.target.y();
       var tbox = e.target.getChildren()[2];
@@ -829,8 +790,6 @@
         var newtext = allpos[nearest_neighbor(abspos, allposcoord)]
         tbox.text(newtext)
         layer.draw();
-        drawgroundedcover(e);
-        drawcatchcover(e);
       }
     });
 
@@ -864,195 +823,6 @@
           stage.find('#pos' + i.toString())[0].hide();
         }
       }
-      layer.draw();
-    }
-
-    function rotate(point1, point2, angle) {
-      // rotate point2 around point1 by angle in degrees
-      anglerad = angle * Math.PI / 180;
-      var x = point1[0] + Math.cos(anglerad) * (point2[0] - point1[0]) - Math.sin(anglerad) * (point2[1] - point1[1]);
-      var y = point1[1] + Math.sin(anglerad) * (point2[0] - point1[0]) + Math.cos(anglerad) * (point2[1] - point1[1]);
-      return [x, y];
-    }
-
-    function extend(point1, point2, factor) {
-      // extend point2 from point1 by factor
-      var x = point1[0] + factor * (point2[0] - point1[0]);
-      var y = point1[1] + factor * (point2[1] - point1[1]);
-      return [x, y];
-    }
-
-    function distance2factor(distance) {
-      return 4 + (distance / 500) * 18;
-    }
-
-    function distance2catchfactor(distance) {
-      return 6 + (distance / 500) * 12;
-    }
-
-    /////////////////// GROUND COVERAGE FUNCTIONS //////////////////////
-    function drawgroundedcover_init(e) {
-      tbox = e.getChildren()[2];
-      if (tbox.id().substring(0, 3) == 'pos') {
-        abspos = [e.x(), e.y()];
-        // an infinite triangle with center at batter, and edges to left and right of the fielder
-
-        var point1 = [width / 2, bat.y()];
-        var distance = Math.sqrt(dist(point1, abspos));
-        var factor = distance2factor(distance);
-
-        var point2 = rotate(point1, abspos, factor);
-        point2 = extend(point1, point2, 500 / distance);
-        var point3 = rotate(point1, abspos, -factor);
-        point3 = extend(point1, point3, 500 / distance);
-
-        // draw the triangle
-        if (groundedcovers[parseInt(tbox.id().substring(3))]) {
-          groundedcovers[parseInt(tbox.id().substring(3))].destroy();
-        }
-        var triangle = new Konva.Line({
-          points: [point1[0], point1[1], point2[0], point2[1], point3[0], point3[1]],
-          fill: 'yellow',
-          closed: true,
-          opacity: 0.5
-        });
-
-        groundedcovers[parseInt(tbox.id().substring(3))] = triangle;
-        layercover.add(triangle);
-        layercover.batchDraw();
-      }
-    }
-
-    function drawgroundedcover(e) {
-      tbox = e.target.getChildren()[2];
-      if (tbox.id().substring(0, 3) == 'pos') {
-        abspos = [e.target.x(), e.target.y()];
-        // an infinite triangle with center at batter, and edges to left and right of the fielder
-        var point1 = [width / 2, bat.y()];
-        var distance = Math.sqrt(dist(point1, abspos));
-        var factor = distance2factor(distance);
-
-
-        var point2 = rotate(point1, abspos, factor);
-        point2 = extend(point1, point2, 500 / distance);
-        var point3 = rotate(point1, abspos, -factor);
-        point3 = extend(point1, point3, 500 / distance);
-
-        // draw the triangle
-        if (groundedcovers[parseInt(tbox.id().substring(3))]) {
-          groundedcovers[parseInt(tbox.id().substring(3))].destroy();
-        }
-        var triangle = new Konva.Line({
-          points: [point1[0], point1[1], point2[0], point2[1], point3[0], point3[1]],
-          fill: 'yellow',
-          closed: true,
-          opacity: 0.5
-        });
-
-        groundedcovers[parseInt(tbox.id().substring(3))] = triangle;
-        layercover.add(triangle);
-        layercover.batchDraw();
-      }
-    }
-
-    //////////////////// END OF GROUND COVERAGE FUNCTIONS //////////////
-
-    //////////////////// CATCH COVERAGE FUNCTIONS //////////////////////
-    function drawcatchcover_init(e) {
-      tbox = e.getChildren()[2];
-      if (tbox.id().substring(0, 3) == 'pos') {
-        abspos = [e.x(), e.y()];
-        // An ellipse with center slightly above the fielder.
-        var point1 = [width / 2, bat.y()];
-        var distance = Math.sqrt(dist(point1, abspos));
-        var factor = distance * 6.28 * distance2catchfactor(distance) / 360;
-        console.log(distance, factor);
-        orientation = Math.atan2(abspos[1] - point1[1], abspos[0] - point1[0])
-
-        // draw the ellipse
-        if (catchcovers[parseInt(tbox.id().substring(3))]) {
-          catchcovers[parseInt(tbox.id().substring(3))].destroy();
-        }
-        var ellipse = new Konva.Ellipse({
-          x: abspos[0] + (point1[0] - abspos[0]) * 0.02,
-          y: abspos[1] + (point1[1] - abspos[1]) * 0.02,
-          radius: { x: factor * 1.1, y: factor },
-          fill: 'orange',
-          opacity: 0.7
-        });
-        ellipse.rotate(orientation * 180 / Math.PI);
-
-        catchcovers[parseInt(tbox.id().substring(3))] = ellipse;
-        layercatch.add(ellipse);
-        layercatch.batchDraw();
-      }
-    }
-
-    function drawcatchcover(e) {
-      tbox = e.target.getChildren()[2];
-      if (tbox.id().substring(0, 3) == 'pos') {
-        abspos = [e.target.x(), e.target.y()];
-        // An ellipse with center slightly above the fielder.
-        var point1 = [width / 2, bat.y()];
-        var distance = Math.sqrt(dist(point1, abspos));
-        var factor = distance * 6.28 * distance2catchfactor(distance) / 360;
-        console.log(distance, factor);
-        orientation = Math.atan2(abspos[1] - point1[1], abspos[0] - point1[0])
-
-        // draw the ellipse
-        if (catchcovers[parseInt(tbox.id().substring(3))]) {
-          catchcovers[parseInt(tbox.id().substring(3))].destroy();
-        }
-        var ellipse = new Konva.Ellipse({
-          x: abspos[0] + (point1[0] - abspos[0]) * 0.02,
-          y: abspos[1] + (point1[1] - abspos[1]) * 0.02,
-          radius: { x: factor * 1.1, y: factor },
-          fill: 'orange',
-          opacity: 0.7
-        });
-        ellipse.rotate(orientation * 180 / Math.PI);
-
-        catchcovers[parseInt(tbox.id().substring(3))] = ellipse;
-        layercatch.add(ellipse);
-        layercatch.batchDraw();
-      }
-    }
-
-    //////////////////// END OF CATCH COVERAGE FUNCTIONS //////////////
-
-    // Global variable to track the state of the checkbox
-    function toggleboundarycoverage() {
-      if ($('#boundarycoverage').is(':checked')) {
-        console.log('checked');
-        layercover.visible(true);
-        stage.draw();
-      }
-      else {
-        layercover.visible(false);
-        stage.draw();
-      }
-    }
-
-    function togglecatchcoverage() {
-      if ($('#catchcoverage').is(':checked')) {
-        layercatch.visible(true);
-        stage.draw();
-      }
-      else {
-        layercatch.visible(false);
-        stage.draw();
-      }
-    }
-
-    toggleboundarycoverage();
-    togglecatchcoverage();
-
-
-    function hidegroundedcover() {
-      layer.draw();
-    }
-
-    function hidecatchcover() {
       layer.draw();
     }
 
