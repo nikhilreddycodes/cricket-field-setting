@@ -1,6 +1,6 @@
 # cricket-field-setting
 
-This custom cricket feild setting app is inspired and copied over from [utkarshmall13's cricket-field-editor](https://utkarshmall13.github.io/cricket-field-editor/) with an intention to add more features and extend the basic app.
+This custom cricket field setting app is inspired and copied over from [utkarshmall13's cricket-field-editor](https://utkarshmall13.github.io/cricket-field-editor/) with an intention to add more features and extend the basic app.
 
 #### Cricket Field Setting with Coverage App can be accessed via link: [https://nikhilreddycodes.github.io/cricket-field-setting](https://nikhilreddycodes.github.io/cricket-field-setting/index.html)
 
@@ -15,4 +15,4 @@ This custom cricket feild setting app is inspired and copied over from [utkarshm
 
 ![alt text][logo]
 
-[logo]: cfs.png "This is a Screenshot of this Cricket Field Setting App"
+[logo]: cfs.png "This is a screenshot of the Cricket Field Setting App"
